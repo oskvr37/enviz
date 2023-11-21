@@ -1,6 +1,6 @@
 [project]
 name = "enviz"
-version = "0.0.1"
+version = "0.1.2"
 authors = [
   { name="oskvr37" },
 ]
