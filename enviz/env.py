@@ -6,7 +6,6 @@ GRAY, CYAN, GREEN, RESET = "\033[90m", "\033[96m", "\033[92m", "\033[0m"
 
 logger = logging.getLogger(__name__)
 
-
 def read_file(path):
     def read_line(line):
         pattern = re.compile(r'^\s*([\w.-]+)\s*=\s*([\'"])([^\'"]*?)\2\s*(?:#.*)?$')
@@ -14,7 +13,6 @@ def read_file(path):
 
         if match:
             key, value = match.group(1), match.group(3)
-            # print(f"{CYAN}{key}{RESET} = {GREEN}{value}{RESET}")
             return key, value
         else:
             return None, None
@@ -38,11 +36,17 @@ class Env(dict):
     """
 
     def __init__(self, __path: str = ".env") -> None:
-        env = read_file(__path)
+        try:
+            env = read_file(__path)
+            logger.info(
+                f"🔧 Loaded {CYAN}{__path}{RESET} with {GREEN}{len(env)}{RESET} variables"
+            )
+        except FileNotFoundError:
+            env = {}
+            logger.warning(
+                f"🔧 {CYAN}{__path}{RESET} not found, using {GREEN}empty{RESET} environment"
+            )
         super().__init__(env)
-        logger.info(
-            f"🔧 Loaded {CYAN}{__path}{RESET} with {GREEN}{len(env)}{RESET} variables
-        ")
 
     def __setitem__(self, __key: str, __value: str) -> None:
         super().__setitem__(__key, __value)
