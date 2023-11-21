@@ -1,5 +1,6 @@
 import unittest
-from enviz import env
+from enviz import Env
+env = Env(".env.test")
 
 
 class TestEnv(unittest.TestCase):
@@ -44,7 +45,3 @@ class TestEnv(unittest.TestCase):
         }
 
         self.assertDictEqual(env, test_env)
-
-
-if __name__ == '__main__':
-    unittest.main()
