@@ -35,7 +35,24 @@ class Env(dict):
         super().__init__(env)
 
     def __setitem__(self, __key: str, __value: str) -> None:
-        return super().__setitem__(__key, __value)
+        super().__setitem__(__key, __value)
+        self.write()
+        return super().__getitem__(__key)
 
     def __getitem__(self, __key: str) -> str:
         return super().__getitem__(__key)
+
+    def __delitem__(self, __key: str) -> None:
+        super().__delitem__(__key)
+        self.write()
+        return None
+
+    def write(self, path=".env.tmp"):
+        def format_line(key, value, format='{} = "{}"', comment=""):
+            if comment:
+                return format.format(key, value) + f"\t# {comment}\n"
+            return format.format(key, value) + "\n"
+
+        with open(path, "w") as f:
+            for key, value in self.items():
+                f.write(format_line(key, value))
