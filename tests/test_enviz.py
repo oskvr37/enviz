@@ -44,3 +44,7 @@ class TestEnv(unittest.TestCase):
         }
 
         self.assertDictEqual(env, test_env)
+
+
+if __name__ == '__main__':
+    unittest.main()
