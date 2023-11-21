@@ -1,9 +1,11 @@
-![enviz logo](https://raw.githubusercontent.com/oskvr37/enviz/main/logo.svg)
+<img src="https://raw.githubusercontent.com/oskvr37/enviz/main/logo.svg" width="100%"/>
 
-# Enviz
+# About
 
-Python .env file made easier
+Enviz is a python module that allows you to write and read environment variables from a file.
 
-# Why?
+# Installation
 
-This is my project to learn packaging modules
+```bash
+pip install enviz
+```
