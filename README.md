@@ -1,4 +1,4 @@
-![enviz logo](https://github.com/oskvr37/enviz/blob/main/logo.svg?raw=true)
+<img src="https://raw.githubusercontent.com/oskvr37/enviz/main/logo.svg" width="100%"/>
 
 # Enviz
 
