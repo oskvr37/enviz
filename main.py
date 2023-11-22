@@ -1,12 +1,10 @@
 from enviz import Env
 
-env = Env('.env.example', True)
+env = Env(path='.env.example', autowrite=True)
 
-variables = {
+env.update({
     'TEST1': '1',
     'TEST2': '2'
-}
-
-env.update(variables)
+})
 
 env['TEST3'] = '3'
