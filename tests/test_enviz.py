@@ -1,6 +1,6 @@
 import unittest
 from enviz import Env
-env = Env(".env.test")
+env = Env("./tests/.env.test")
 
 
 class TestEnv(unittest.TestCase):
