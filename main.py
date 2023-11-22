@@ -1,5 +1,12 @@
-from enviz import env
+from enviz import Env
 
-print(env["TEST"])
+env = Env('.env.example', True)
 
-env["NEW"] = "new value"
+variables = {
+    'TEST1': '1',
+    'TEST2': '2'
+}
+
+env.update(variables)
+
+env['TEST3'] = '3'
