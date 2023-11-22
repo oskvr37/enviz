@@ -1,10 +1,11 @@
-import re
 import logging
+import re
 
 
 GRAY, CYAN, GREEN, RESET = "\033[90m", "\033[96m", "\033[92m", "\033[0m"
 
 logger = logging.getLogger(__name__)
+
 
 def read_file(path):
     def read_line(line):
@@ -35,45 +36,67 @@ class Env(dict):
     - delete the variables
     """
 
-    def __init__(self, __path: str = ".env") -> None:
+    def __init__(self, path=".env", autowrite=False) -> None:
+        self.path = path
+        self.autowrite = autowrite
+        super().__init__({})
+        self.read()
+
+    def read(self):
         try:
-            env = read_file(__path)
+            env = read_file(self.path)
             logger.info(
-                f"🔧 Loaded {CYAN}{__path}{RESET} with {GREEN}{len(env)}{RESET} variables"
+                f"🔧 Loaded {CYAN}{self.path}{RESET} with {GREEN}{len(env)}{RESET} variables"
             )
         except FileNotFoundError:
             env = {}
             logger.warning(
-                f"🔧 {CYAN}{__path}{RESET} not found, using {GREEN}empty{RESET} environment"
+                f"🔧 {CYAN}{self.path}{RESET} not found, using {GREEN}empty{RESET} environment"
             )
-        super().__init__(env)
+
+        self.update(env)
 
     def __setitem__(self, __key: str, __value: str) -> None:
         super().__setitem__(__key, __value)
-        self.write()
+        self.auto_write()
         return super().__getitem__(__key)
 
     def __getitem__(self, __key: str) -> str:
         return super().__getitem__(__key)
 
-    def __delitem__(self, __key: str) -> None:
-        super().__delitem__(__key)
-        self.write()
+    def update(self, __variables: dict) -> None:
+        super().update(__variables)
+        self.auto_write()
         return None
 
-    def write(self, path=".env.tmp"):
+    def __delitem__(self, __key: str) -> None:
+        super().__delitem__(__key)
+        self.auto_write()
+        return None
+
+    def write(self, path=""):
         """
-        Write the variables to provided `path`
+        Write the variables to provided `path`,
+        if `path` is not provided, it will write to `self.path.tmp`
         """
+        
+        if self == {}:
+            logger.warning(
+                f"🔧 {CYAN}{self.path}{RESET} is empty, skipping write"
+            )
+            return
+
+        logger.debug(
+            f"⚡ Saving {CYAN}{path}{RESET} with {GREEN}{len(self)}{RESET} variables"
+        )
 
         def format_line(key, value, format='{} = "{}"', comment=""):
             if comment:
                 return format.format(key, value) + f"\t# {comment}\n"
             return format.format(key, value) + "\n"
 
-        logger.debug(
-            f"⚡ Saving {CYAN}{path}{RESET} with {GREEN}{len(self)}{RESET} variables"
-        )
+        if path == "":
+            path = f"{self.path}.tmp"
 
         with open(path, "w") as f:
             for key, value in self.items():
@@ -82,3 +105,7 @@ class Env(dict):
         logger.debug(
             f"✅ Saved {CYAN}{path}{RESET} with {GREEN}{len(self)}{RESET} variables"
         )
+
+    def auto_write(self):
+        if self.autowrite:
+            self.write()
